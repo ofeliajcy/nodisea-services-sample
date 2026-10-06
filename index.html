@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nodisea Services Sample</title>
+<style>
+  :root{ --page-bg:#ffffff; --fg:#15130f; --muted:#6b6b6b; --border:#ececec; --cream:#faf1de; --orange:#dd8a2e; --orange-dark:#c67624; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--page-bg); color:var(--fg); font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:880px; margin:0 auto; padding:0 22px 100px; }
+  header.page{ background:var(--cream); padding:56px 22px 48px; margin:0 0 44px; }
+  header.page .inner{ max-width:836px; margin:0 auto; }
+  .eyebrow{ font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--orange); margin-bottom:10px; }
+  header.page .eyebrow{ margin-bottom:14px; }
+  header.page h1{ font-size:36px; margin:0 0 14px; font-weight:900; letter-spacing:-.02em; }
+  header.page p{ color:var(--muted); margin:0; font-size:15px; max-width:640px; }
+  .triage{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:8px; }
+  @media (max-width:680px){ .triage{ grid-template-columns:1fr; } }
+  .triage input{ display:none; }
+  .triage label{ cursor:pointer; display:flex; flex-direction:column; gap:2px; border-radius:0; padding:26px 22px; border:1px solid var(--border); background:#fff; color:var(--fg); text-align:left; transition:border-color .18s ease, background .18s ease; }
+  .triage label:hover{ border-color:var(--orange); }
+  .triage label .icon-badge{ width:40px; height:40px; background:var(--cream); color:var(--orange); display:flex; align-items:center; justify-content:center; font-size:19px; margin-bottom:16px; }
+  .triage label .label{ font-weight:800; font-size:15.5px; margin-bottom:5px; letter-spacing:-.01em; }
+  .triage label .sub{ font-size:12.5px; color:var(--muted); }
+  .triage label .arrow{ margin-top:16px; font-size:13px; font-weight:700; color:var(--orange); opacity:0; transform:translateX(-4px); transition:opacity .18s ease, transform .18s ease; }
+  .triage label:hover .arrow{ opacity:1; transform:translateX(0); }
+  .triage input:checked + label{ border-color:var(--orange); background:var(--cream); }
+  .triage input:checked + label .arrow{ opacity:1; transform:translateX(0); }
+  .triage input:checked + label .icon-badge{ background:var(--orange); color:#fff; }
+  .panel{ display:none; margin-top:48px; }
+  .panel.is-visible{ animation:panelIn .35s ease both; }
+  @keyframes panelIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+  .panel-head{ padding-bottom:8px; }
+  .panel-head h2{ font-size:26px; font-weight:900; margin:0 0 8px; letter-spacing:-.01em; }
+  .panel-head p{ font-size:14.5px; color:var(--muted); margin:0; max-width:680px; }
+  .cat{ margin-top:44px; }
+  .cat-head{ border-bottom:1px solid var(--border); padding-bottom:16px; }
+  .cat-head h3{ font-size:19px; font-weight:900; margin:0 0 6px; letter-spacing:-.01em; }
+  .cat-head p{ font-size:13.5px; color:var(--muted); margin:0; }
+  .panel-head + .cat{ margin-top:28px; }
+  .cat.plain .row-list{ border-top:1px solid var(--border); }
+  .row-list{ display:flex; flex-direction:column; }
+  .row{ display:flex; align-items:center; justify-content:space-between; gap:20px; padding:20px 0; border-bottom:1px solid var(--border); }
+  .row .text h3{ font-size:16px; font-weight:800; margin:0 0 4px; letter-spacing:-.01em; transition:color .15s ease; }
+  .row .text p{ font-size:13.5px; color:var(--muted); margin:0 0 4px; max-width:620px; }
+  .row .text p:last-child{ margin-bottom:0; }
+  .row .more{ flex:0 0 auto; font-size:13.5px; font-weight:700; color:var(--orange); text-decoration:none; white-space:nowrap; display:inline-flex; align-items:center; gap:5px; transition:gap .15s ease; }
+  .row:hover .text h3{ color:var(--orange); }
+  .row:hover .more{ gap:9px; }
+  .footer-note{ text-align:center; margin-top:64px; padding-top:40px; border-top:1px solid var(--border); }
+  .footer-note h2{ font-size:24px; font-weight:900; margin:0 0 10px; letter-spacing:-.01em; }
+  .footer-note p{ font-size:14px; color:var(--muted); margin:0 auto; max-width:560px; }
+  .footer-note a{ display:inline-block; margin-top:20px; background:var(--orange); color:#fff; text-decoration:none; font-weight:800; font-size:14px; padding:14px 30px; border-radius:0; transition:background .15s ease; }
+  .footer-note a:hover{ background:var(--orange-dark); }
+  .sync{ text-align:center; margin-top:48px; font-size:11.5px; color:#a0a0a0; }
+</style>
+</head>
+<body>
+<header class="page"><div class="inner"><div class="eyebrow" data-k="Header|Eyebrow">Services</div><h1 data-k="Header|Title">Immigration Services in Spain</h1><p data-k="Header|Intro">We offer a wide range of immigration services: residence permits of every kind, visas, Spanish nationality and everything you need to settle in Spain. Choose the option that fits your situation to see the procedure.</p></div></header>
+<div class="wrap">
+<div class="triage">
+<input type="radio" name="stage" id="sa"><label for="sa"><span class="icon-badge">🧭</span><span class="label" data-k="Top cards|Card 1 title">You want to move to Spain</span><span class="sub" data-k="Top cards|Card 1 description">You're currently outside Spain</span><span class="arrow" data-k="Top cards|Card 1 hover link">See identities →</span></label>
+<input type="radio" name="stage" id="sb"><label for="sb"><span class="icon-badge">🏠</span><span class="label" data-k="Top cards|Card 2 title">Arraigo</span><span class="sub" data-k="Top cards|Card 2 description">You're in Spain but can't stay legally</span><span class="arrow" data-k="Top cards|Card 2 hover link">See options →</span></label>
+<input type="radio" name="stage" id="sc"><label for="sc"><span class="icon-badge">📄</span><span class="label" data-k="Top cards|Card 3 title">Documents &amp; paperwork</span><span class="sub" data-k="Top cards|Card 3 description">You already have your permit</span><span class="arrow" data-k="Top cards|Card 3 hover link">See options →</span></label>
+</div>
+
+<div class="panel" id="panel-a">
+<div class="panel-head"><div class="eyebrow" data-k="Card 1: move to Spain|Eyebrow">An all-in-one solution</div><h2 data-k="Card 1: move to Spain|Heading">Immigration &amp; Citizenship</h2><p data-k="Card 1: move to Spain|Intro">Mastering one area of law takes intensive dedication. That is why we focus exclusively on Spanish Immigration Law, to guarantee our clients the highest possible success rate. Choose the category that matches your plans.</p></div>
+<div class="cat">
+<div class="cat-head"><div class="eyebrow" data-k="Card 1: move to Spain|Permits for Employees: eyebrow">For employees</div><h3 data-k="Card 1: move to Spain|Permits for Employees: heading">Permits for Employees</h3><p data-k="Card 1: move to Spain|Permits for Employees: intro">The most popular residence and work permits for those who will work for a company in Spain.</p></div>
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|Employee Permit: title">Employee Permit</h3><p data-k="Card 1: move to Spain|Employee Permit: description">The “standard” permit for foreigners who want to work in Spain as employees. Minimum wages and working hours apply, considering the national employment situation.</p></div><a class="more" data-u="Card 1: move to Spain|Employee Permit: link label" href="https://nodisea.com/employee-visa/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|Employee Permit: link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|Skilled Worker Permit: title">Skilled Worker Permit</h3><p data-k="Card 1: move to Spain|Skilled Worker Permit: description">For employees who can demonstrate a high level of professional competence.</p></div><a class="more" data-u="Card 1: move to Spain|Skilled Worker Permit: link label" href="https://nodisea.com/skilled-worker-visa/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|Skilled Worker Permit: link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+<div class="cat">
+<div class="cat-head"><div class="eyebrow" data-k="Card 1: move to Spain|Permits for Remote Workers: eyebrow">For remote workers</div><h3 data-k="Card 1: move to Spain|Permits for Remote Workers: heading">Permits for Remote Workers</h3><p data-k="Card 1: move to Spain|Permits for Remote Workers: intro">Residence authorisation for those who work remotely for a company or clients outside Spain.</p></div>
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|Digital Nomad Visa: title">Digital Nomad Visa</h3><p data-k="Card 1: move to Spain|Digital Nomad Visa: description 1">Employees: Only those who work remotely for a foreign company are eligible for this residence authorisation.</p><p data-k="Card 1: move to Spain|Digital Nomad Visa: description 2">Freelancers: For freelancers who work remotely for clients outside Spain.</p></div><a class="more" data-u="Card 1: move to Spain|Digital Nomad Visa: link label" href="https://nodisea.com/digital-nomad-visa-spain/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|Digital Nomad Visa: link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+<div class="cat">
+<div class="cat-head"><div class="eyebrow" data-k="Card 1: move to Spain|Permits for Freelancers: eyebrow">For freelancers</div><h3 data-k="Card 1: move to Spain|Permits for Freelancers: heading">Permits for Freelancers</h3><p data-k="Card 1: move to Spain|Permits for Freelancers: intro">The most popular residence and work permits for self-employed professionals and entrepreneurs.</p></div>
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|Freelancer Permit: title">Freelancer Permit</h3><p data-k="Card 1: move to Spain|Freelancer Permit: description">The “standard” permit for self-employed workers. The core element is a solid business plan and enough capital to start the activity.</p></div><a class="more" data-u="Card 1: move to Spain|Freelancer Permit: link label" href="https://nodisea.com/freelancer-permit/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|Freelancer Permit: link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|Entrepreneur Visa: title">Entrepreneur Visa</h3><p data-k="Card 1: move to Spain|Entrepreneur Visa: description">For innovative and highly scalable business projects. The ENISA report is decisive here.</p></div><a class="more" data-u="Card 1: move to Spain|Entrepreneur Visa: link label" href="https://nodisea.com/entrepreneur-visa/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|Entrepreneur Visa: link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+<div class="cat">
+<div class="cat-head"><div class="eyebrow" data-k="Card 1: move to Spain|Study, Internship and Job Search: eyebrow">For students</div><h3 data-k="Card 1: move to Spain|Study, Internship and Job Search: heading">Study, Internship and Job Search</h3><p data-k="Card 1: move to Spain|Study, Internship and Job Search: intro">Everything you need to study in Spain and to stay afterwards.</p></div>
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|Student Visa: title">Student Visa</h3><p data-k="Card 1: move to Spain|Student Visa: description">Your authorisation if you want to come to Spain to study or do an internship.</p></div><a class="more" data-u="Card 1: move to Spain|Student Visa: link label" href="https://nodisea.com/student-visa-spain-complete-application-guide/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|Student Visa: link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|Internship Residence: title">Internship Residence</h3><p data-k="Card 1: move to Spain|Internship Residence: description">Spain is the right place to do your internship.</p></div><a class="more" data-u="Card 1: move to Spain|Internship Residence: link label" href="https://nodisea.com/residence-for-internship/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|Internship Residence: link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|Job Search Permit: title">Job Search Permit</h3><p data-k="Card 1: move to Spain|Job Search Permit: description">If you have finished your studies, you can apply for your residency.</p></div><a class="more" data-u="Card 1: move to Spain|Job Search Permit: link label" href="https://nodisea.com/job-search-visa/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|Job Search Permit: link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+<div class="cat">
+<div class="cat-head"><div class="eyebrow" data-k="Card 1: move to Spain|EU Citizens and Their Families: eyebrow">EU permits</div><h3 data-k="Card 1: move to Spain|EU Citizens and Their Families: heading">EU Citizens and Their Families</h3><p data-k="Card 1: move to Spain|EU Citizens and Their Families: intro">Permits for EU citizens and their family members.</p></div>
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|EU Family Card: title">EU Family Card</h3><p data-k="Card 1: move to Spain|EU Family Card: description">As a family member of an EU citizen you are eligible for this excellent permit, valid for 5 years.</p></div><a class="more" data-u="Card 1: move to Spain|EU Family Card: link label" href="https://nodisea.com/eu-family-card/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|EU Family Card: link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|EU Registration Certificate (CUE): title">EU Registration Certificate (CUE)</h3><p data-k="Card 1: move to Spain|EU Registration Certificate (CUE): description">The certificate EU citizens must request to reside long-term in Spain.</p></div><a class="more" data-u="Card 1: move to Spain|EU Registration Certificate (CUE): link label" href="https://nodisea.com/cue/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|EU Registration Certificate (CUE): link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+<div class="cat">
+<div class="cat-head"><div class="eyebrow" data-k="Card 1: move to Spain|Non-Lucrative Residence: eyebrow">Without working</div><h3 data-k="Card 1: move to Spain|Non-Lucrative Residence: heading">Non-Lucrative Residence</h3><p data-k="Card 1: move to Spain|Non-Lucrative Residence: intro">If you have financial means and are not going to work in Spain.</p></div>
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|Non-Lucrative Visa: title">Non-Lucrative Visa</h3><p data-k="Card 1: move to Spain|Non-Lucrative Visa: description">Your permit if you have sufficient financial means and will not work in Spain.</p></div><a class="more" data-u="Card 1: move to Spain|Non-Lucrative Visa: link label" href="https://nodisea.com/non-lucrative-visa-spain-complete-application-guide/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|Non-Lucrative Visa: link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+<div class="cat">
+<div class="cat-head"><div class="eyebrow" data-k="Card 1: move to Spain|Spanish Citizenship: eyebrow">Citizenship</div><h3 data-k="Card 1: move to Spain|Spanish Citizenship: heading">Spanish Citizenship</h3><p data-k="Card 1: move to Spain|Spanish Citizenship: intro">There are several ways to obtain Spanish citizenship. An individual analysis is advisable.</p></div>
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 1: move to Spain|Spanish Citizenship: title">Spanish Citizenship</h3><p data-k="Card 1: move to Spain|Spanish Citizenship: description">By residence, by option, by origin or by marriage: we assess your case and handle the whole procedure.</p></div><a class="more" data-u="Card 1: move to Spain|Spanish Citizenship: link label" href="https://nodisea.com/spanish-citizenship/" target="_blank" rel="noopener"><span data-k="Card 1: move to Spain|Spanish Citizenship: link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+</div>
+<div class="panel" id="panel-b">
+<div class="panel-head"><div class="eyebrow" data-k="Card 2: Arraigo|Eyebrow">Arraigos</div><h2 data-k="Card 2: Arraigo|Heading">Arraigo Authorisations</h2><p data-k="Card 2: Arraigo|Intro">Regularise your situation in Spain through the type of arraigo that fits your case.</p></div>
+<div class="cat plain">
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 2: Arraigo|Arraigo Familiar: title">Arraigo Familiar</h3><p data-k="Card 2: Arraigo|Arraigo Familiar: description">Excellent authorisation for non-EU family members of a Spanish citizen.</p></div><a class="more" data-u="Card 2: Arraigo|Arraigo Familiar: link label" href="https://nodisea.com/arraigo-familiar/" target="_blank" rel="noopener"><span data-k="Card 2: Arraigo|Arraigo Familiar: link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 2: Arraigo|Arraigo Social: title">Arraigo Social</h3><p data-k="Card 2: Arraigo|Arraigo Social: description">If you have resided in Spain long enough and can prove your integration, this permit is yours.</p></div><a class="more" data-u="Card 2: Arraigo|Arraigo Social: link label" href="https://nodisea.com/arraigo-social/" target="_blank" rel="noopener"><span data-k="Card 2: Arraigo|Arraigo Social: link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 2: Arraigo|Arraigo para la Formación: title">Arraigo para la Formación</h3><p data-k="Card 2: Arraigo|Arraigo para la Formación: description">Two years in Spain and you want to train and regularise your situation.</p></div><a class="more" data-u="Card 2: Arraigo|Arraigo para la Formación: link label" href="https://nodisea.com/arraigo-formacion/" target="_blank" rel="noopener"><span data-k="Card 2: Arraigo|Arraigo para la Formación: link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 2: Arraigo|Arraigo Sociolaboral: title">Arraigo Sociolaboral</h3><p data-k="Card 2: Arraigo|Arraigo Sociolaboral: description">For people who have been in Spain for at least two years and have one or more employment contracts that meet the legal requirements.</p></div><a class="more" data-u="Card 2: Arraigo|Arraigo Sociolaboral: link label" href="https://nodisea.com/arraigo-laboral/" target="_blank" rel="noopener"><span data-k="Card 2: Arraigo|Arraigo Sociolaboral: link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+</div>
+<div class="panel" id="panel-c">
+<div class="panel-head"><div class="eyebrow" data-k="Card 3: Documents|Eyebrow">Settle in Spain</div><h2 data-k="Card 3: Documents|Heading">Everything About Your Documentation</h2><p data-k="Card 3: Documents|Intro">Company incorporation, NIE assignment, TIE requests, census registration and other procedures once you are here.</p></div>
+<div class="cat">
+<div class="cat-head"><div class="eyebrow" data-k="Card 3: Documents|Your Identity Documents: eyebrow">Documentation</div><h3 data-k="Card 3: Documents|Your Identity Documents: heading">Your Identity Documents</h3><p data-k="Card 3: Documents|Your Identity Documents: intro">TIE and NIE: the documents every foreigner in Spain needs.</p></div>
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 3: Documents|Foreign Identity Card (TIE): title">Foreign Identity Card (TIE)</h3><p data-k="Card 3: Documents|Foreign Identity Card (TIE): description">We help you apply for your TIE residence card after a favourable decision.</p></div><a class="more" data-u="Card 3: Documents|Foreign Identity Card (TIE): link label" href="https://nodisea.com/tie-application/" target="_blank" rel="noopener"><span data-k="Card 3: Documents|Foreign Identity Card (TIE): link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 3: Documents|Foreign Identity Number (NIE): title">Foreign Identity Number (NIE)</h3><p data-k="Card 3: Documents|Foreign Identity Number (NIE): description">The NIE is essential for many procedures in Spain. We can help you obtain it.</p></div><a class="more" data-u="Card 3: Documents|Foreign Identity Number (NIE): link label" href="https://nodisea.com/assignment-of-nie/" target="_blank" rel="noopener"><span data-k="Card 3: Documents|Foreign Identity Number (NIE): link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+<div class="cat">
+<div class="cat-head"><div class="eyebrow" data-k="Card 3: Documents|Census and Housing: eyebrow">Housing</div><h3 data-k="Card 3: Documents|Census and Housing: heading">Census and Housing</h3><p data-k="Card 3: Documents|Census and Housing: intro">Requirements linked to where you live.</p></div>
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 3: Documents|Empadronamiento: title">Empadronamiento</h3><p data-k="Card 3: Documents|Empadronamiento: description">The census registration in Spain, an important requirement for many immigration processes.</p></div><a class="more" data-u="Card 3: Documents|Empadronamiento: link label" href="https://nodisea.com/empadronamiento/" target="_blank" rel="noopener"><span data-k="Card 3: Documents|Empadronamiento: link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 3: Documents|Housing Report: title">Housing Report</h3><p data-k="Card 3: Documents|Housing Report: description">To reunite family members, a suitable housing report must be submitted.</p></div><a class="more" data-u="Card 3: Documents|Housing Report: link label" href="https://nodisea.com/housing-report/" target="_blank" rel="noopener"><span data-k="Card 3: Documents|Housing Report: link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+<div class="cat">
+<div class="cat-head"><div class="eyebrow" data-k="Card 3: Documents|Set Up Your Business: eyebrow">Business</div><h3 data-k="Card 3: Documents|Set Up Your Business: heading">Set Up Your Business</h3><p data-k="Card 3: Documents|Set Up Your Business: intro">Company incorporation and self-employment in Spain.</p></div>
+<div class="row-list">
+<div class="row"><div class="text"><h3 data-k="Card 3: Documents|Company Incorporation: title">Company Incorporation</h3><p data-k="Card 3: Documents|Company Incorporation: description">Planning to set up a company in Spain? We like that idea, and we can help you.</p></div><a class="more" data-u="Card 3: Documents|Company Incorporation: link label" href="https://nodisea.com/company-incorporation/" target="_blank" rel="noopener"><span data-k="Card 3: Documents|Company Incorporation: link label">Learn more</span><span class="arr">→</span></a></div>
+<div class="row"><div class="text"><h3 data-k="Card 3: Documents|Autónomo Registration: title">Autónomo Registration</h3><p data-k="Card 3: Documents|Autónomo Registration: description">Become self-employed in Spain and overcome the bureaucratic obstacles with our help.</p></div><a class="more" data-u="Card 3: Documents|Autónomo Registration: link label" href="https://nodisea.com/autonomo-registration/" target="_blank" rel="noopener"><span data-k="Card 3: Documents|Autónomo Registration: link label">Learn more</span><span class="arr">→</span></a></div>
+</div></div>
+</div>
+
+<div class="footer-note"><div class="eyebrow" data-k="Footer|Eyebrow">No questions left unanswered</div><h2 data-k="Footer|Heading">Book a Free Consultation</h2><p data-k="Footer|Intro">A free consultation with an immigration lawyer in Spain helps you find answers and gives you confidence in the professional assisting you. Schedule yours in just a minute.</p><a data-u="Footer|Button" data-k="Footer|Button" href="https://nodisea.com/book-a-consultation/" target="_blank" rel="noopener">Book a free consultation</a></div>
+<div class="sync" id="sync-status"></div>
+</div>
+<script>
+  // ---- Paste the Google Sheet "Publish to web" CSV link between the quotes below ----
+  var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRaR8t97_vM_Vq-QUQR5FO8XtG7ENA-kXd9v6VckM6eOqpUGLznSpPFEo4923BpToBp-AQHjVYRyKbG/pub?gid=1410354901&single=true&output=csv";
+
+  var map = { sa: 'panel-a', sb: 'panel-b', sc: 'panel-c' };
+  function showPanel(id){
+    Object.values(map).forEach(function(pid){
+      var p = document.getElementById(pid);
+      p.classList.remove('is-visible');
+      p.style.display = 'none';
+    });
+    var el = document.getElementById(map[id]);
+    el.style.display = 'block';
+    void el.offsetWidth;
+    el.classList.add('is-visible');
+  }
+  Object.keys(map).forEach(function(id){
+    document.getElementById(id).addEventListener('change', function(){ showPanel(id); });
+  });
+
+  // ---- Live copy from the sheet ----
+  function parseCSV(text){
+    var rows = [], row = [], cell = "", q = false, i = 0, c;
+    while(i < text.length){
+      c = text[i];
+      if(q){
+        if(c === '"'){ if(text[i+1] === '"'){ cell += '"'; i++; } else { q = false; } }
+        else { cell += c; }
+      } else {
+        if(c === '"'){ q = true; }
+        else if(c === ','){ row.push(cell); cell = ""; }
+        else if(c === '\n'){ row.push(cell); rows.push(row); row = []; cell = ""; }
+        else if(c !== '\r'){ cell += c; }
+      }
+      i++;
+    }
+    if(cell.length || row.length){ row.push(cell); rows.push(row); }
+    return rows;
+  }
+  function applySheet(rows){
+    var h = rows[0].map(function(s){ return s.trim(); });
+    var iS = h.indexOf("Section"), iE = h.indexOf("Element"), iT = h.indexOf("Text in the sample"),
+        iC = h.indexOf("Corrected text"), iU = h.indexOf("Link URL");
+    if(iS < 0 || iE < 0 || iT < 0) throw new Error("Unexpected sheet columns");
+    var data = {};
+    rows.slice(1).forEach(function(r){
+      var key = (r[iS] || "").trim() + "|" + (r[iE] || "").trim();
+      var corrected = iC >= 0 ? (r[iC] || "").trim() : "";
+      data[key] = { text: corrected || (r[iT] || "").trim(), url: iU >= 0 ? (r[iU] || "").trim() : "" };
+    });
+    document.querySelectorAll('[data-k]').forEach(function(el){
+      var d = data[el.getAttribute('data-k')];
+      if(d && d.text) el.textContent = d.text;
+    });
+    document.querySelectorAll('[data-u]').forEach(function(el){
+      var d = data[el.getAttribute('data-u')];
+      if(d && d.url) el.setAttribute('href', d.url);
+    });
+  }
+  function status(msg){ document.getElementById('sync-status').textContent = msg; }
+  if(SHEET_CSV_URL){
+    var sep = SHEET_CSV_URL.indexOf('?') > -1 ? '&' : '?';
+    fetch(SHEET_CSV_URL + sep + '_=' + Date.now(), { cache: 'no-store' })
+      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function(t){ applySheet(parseCSV(t)); status('Copy loaded from the Google Sheet'); })
+      .catch(function(){ status('Google Sheet unavailable, showing the saved copy'); });
+  }
+</script>
+</body>
+</html>
